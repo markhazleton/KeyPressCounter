@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="favicon.ico" />
     <None Remove="Icon1.ico" />
   </ItemGroup>
 
@@ -34,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Icon1.ico">
+    <Content Include="favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -43,6 +43,6 @@ public class Counter
     }
     public override string ToString()
     {
-        return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Total Count: {TotalCount}, Current Count: {CurrentCount}, Max Per Interval: {MaxPerInterval}, Longest Interval Without Increment: {LongestIntervalWithoutIncrement}";
+        return $"Total Count: {TotalCount}, Current Count: {CurrentCount}, Max Per Interval: {MaxPerInterval}, Longest Interval Without Increment: {LongestIntervalWithoutIncrement}";
     }
 }

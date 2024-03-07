@@ -25,10 +25,13 @@ public class CustomApplicationContext : ApplicationContext
 
     private ContextMenuStrip CreateContextMenu()
     {
-        ContextMenuStrip menu = new ContextMenuStrip();
-        ToolStripMenuItem exitItem = new ToolStripMenuItem("Exit", null, Exit_Click);
-
+        ContextMenuStrip menu = new();
+        ToolStripMenuItem exitItem = new("Exit", null, Exit_Click);
         menu.Items.Add(exitItem);
+
+        ToolStripMenuItem statsItem = new("Stats", null, TrayIcon_DoubleClick );
+        menu.Items.Add(statsItem);
+
         return menu;
     }
 
@@ -50,10 +53,10 @@ public class CustomApplicationContext : ApplicationContext
     {
         trayIcon = new NotifyIcon()
         {
-            Icon = new Icon("Icon1.ico"), // Set your icon here
+            Icon = new Icon("favicon.ico"), // Set your icon here
             ContextMenuStrip = CreateContextMenu(), // Optional: Set if you want a right-click menu
-            Visible = true, // Make the icon visible in the tray
-            Text = "Your application tooltip text here" // Hover text
+            Visible = true, 
+            Text = "Double Click Icon for Stats" 
         };
         // Optional: Handle double-click event
         trayIcon.DoubleClick += TrayIcon_DoubleClick;
@@ -110,12 +113,8 @@ public class CustomApplicationContext : ApplicationContext
 
     private void UpdateTrayIconText()
     {
-        string tooltipText = $"Keystrokes: {keyPressCounter.TotalCount}, Clicks: {mouseClickCounter.TotalCount}";
-        if (tooltipText.Length >= 63) // Ensure the tooltip text length does not exceed the typical limit
-        {
-            tooltipText = $"{tooltipText.Substring(0, 60)}...";
-        }
-        trayIcon.Text = tooltipText;
+        string log = $"\n Keystrokes: {keyPressCounter} \n Mouse Clicks: {mouseClickCounter}";
+        trayIcon.ShowBalloonTip(5000, "KeyPressCounter Stats", $"{log}", ToolTipIcon.Info);
     }
 
     // Make sure to dispose of the timers and globalHook properly
