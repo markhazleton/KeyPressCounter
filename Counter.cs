@@ -1,11 +1,11 @@
 ﻿namespace MWH.KeyPressCounter;
 public class Counter
 {
-    public int CurrentCount { get; private set; } = 0;
-    public int TotalCount { get; private set; } = 0;
-    public int MaxPerInterval { get; private set; } = 0;
-    private int intervalsWithoutIncrement = 0;
-    public int LongestIntervalWithoutIncrement { get; private set; } = 0;
+    public int CurrentCount { get; private set; }
+    public int TotalCount { get; private set; }
+    public int MaxPerInterval { get; private set; }
+    private int intervalsWithoutIncrement;
+    public int LongestIntervalWithoutIncrement { get; private set; }
 
     public void Increment()
     {

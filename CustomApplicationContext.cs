@@ -68,14 +68,14 @@ public class CustomApplicationContext : ApplicationContext
         mouseClickCounter.UpdateIntervalMetrics();
 
         string log = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}: Keystrokes: {keyPressCounter.TotalCount}, Mouse Clicks: {mouseClickCounter.TotalCount}, Max Keystrokes/Min: {keyPressCounter.MaxPerInterval}, Max Clicks/Min: {mouseClickCounter.MaxPerInterval}";
-        File.AppendAllText(logFilePath, log + Environment.NewLine);
+        File.AppendAllText(logFilePath, $"{log}{Environment.NewLine}");
     }
 
     private void LogDailySummary(object sender, ElapsedEventArgs e)
     {
         double averageClicksPerMinute = mouseClickCounter.TotalCount / 1440.0; // 1440 minutes in a day
         string log = $"{DateTime.Now:yyyy-MM-dd}: Total Keystrokes: {keyPressCounter.TotalCount}, Total Mouse Clicks: {mouseClickCounter.TotalCount}, Avg Clicks/Min: {averageClicksPerMinute:F2}, Longest No Click Period: {mouseClickCounter.LongestIntervalWithoutIncrement} minutes";
-        File.AppendAllText(dailyLogFilePath, log + Environment.NewLine);
+        File.AppendAllText(dailyLogFilePath, $"{log}{Environment.NewLine}");
 
         keyPressCounter.ResetTotalMetrics();
         mouseClickCounter.ResetTotalMetrics();
