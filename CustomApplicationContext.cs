@@ -29,7 +29,7 @@ public class CustomApplicationContext : ApplicationContext
         ToolStripMenuItem exitItem = new("Exit", null, Exit_Click);
         menu.Items.Add(exitItem);
 
-        ToolStripMenuItem statsItem = new("Stats", null, TrayIcon_DoubleClick );
+        ToolStripMenuItem statsItem = new("Stats", null, TrayIcon_DoubleClick);
         menu.Items.Add(statsItem);
 
         return menu;
@@ -55,8 +55,8 @@ public class CustomApplicationContext : ApplicationContext
         {
             Icon = new Icon("favicon.ico"), // Set your icon here
             ContextMenuStrip = CreateContextMenu(), // Optional: Set if you want a right-click menu
-            Visible = true, 
-            Text = "Double Click Icon for Stats" 
+            Visible = true,
+            Text = "Double Click Icon for Stats"
         };
         // Optional: Handle double-click event
         trayIcon.DoubleClick += TrayIcon_DoubleClick;
