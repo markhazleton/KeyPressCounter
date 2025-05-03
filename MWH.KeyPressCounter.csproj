@@ -18,5 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MouseKeyHook" Version="5.7.1" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="8.0.0" />
   </ItemGroup>
 </Project>
