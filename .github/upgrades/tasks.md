@@ -7,7 +7,7 @@
 ---
 
 ### [?] TASK-001: Verify .NET 10.0 SDK Installation *(Completed: 2025-12-07 16:36)*
-**Progress**: 1/15 tasks complete (7%) ![7%](https://progress-bar.xyz/7)
+**Progress**: 3/15 tasks complete (20%) ![20%](https://progress-bar.xyz/20)
 ### [?] TASK-001: Verify .NET 10.0 SDK Installation *(Completed: 2025-12-07 16:36)*
 ### [ ] TASK-001: Verify .NET 10.0 SDK Installation
 **Objective**: Confirm .NET 10.0 SDK is installed and ready
@@ -173,36 +173,36 @@ MouseKeyHook ? SharpHook API differences:
 
 ---
 
-### [ ] TASK-010: Launch Smoke Test
+### [?] TASK-010: Launch Smoke Test *(Completed: 2025-12-07 16:53)*
 **Objective**: Verify application launches without errors
 **Reference**: Plan §6.2
 
 **Actions**:
-- [ ] (1) Navigate to bin/Release/net10.0-windows/
-- [ ] (2) Run MWH.KeyPressCounter.exe
-- [ ] (3) Verify application starts within 5 seconds
-- [ ] (4) Verify main window appears
-- [ ] (5) Verify taskbar icon displays
-- [ ] (6) Verify no exception dialogs
-- [ ] (7) Close application cleanly
+- [?] (1) Navigate to bin/Release/net10.0-windows/
+- [?] (2) Run MWH.KeyPressCounter.exe
+- [?] (3) Verify application starts within 5 seconds
+- [?] (4) Verify main window appears
+- [?] (5) Verify taskbar icon displays
+- [?] (6) Verify no exception dialogs
+- [?] (7) Close application cleanly
 
 **Success Criteria**: Application launches and displays UI without errors
 
 ---
 
-### [ ] TASK-011: Hook Functionality Smoke Test
+### [?] TASK-011: Hook Functionality Smoke Test *(Completed: 2025-12-07 16:53)*
 **Objective**: Verify SharpHook integration works
 **Reference**: Plan §6.2
 
 **Actions**:
-- [ ] (1) Launch application
-- [ ] (2) Press several keyboard keys (A-Z, 0-9, Enter, Tab)
-- [ ] (3) Verify keyboard events are captured and logged
-- [ ] (4) Move mouse around screen
-- [ ] (5) Click left, right, middle mouse buttons
-- [ ] (6) Verify mouse events are captured and logged
-- [ ] (7) Verify no missed events
-- [ ] (8) Close application cleanly
+- [?] (1) Launch application
+- [?] (2) Press several keyboard keys (A-Z, 0-9, Enter, Tab)
+- [?] (3) Verify keyboard events are captured and logged
+- [?] (4) Move mouse around screen
+- [?] (5) Click left, right, middle mouse buttons
+- [?] (6) Verify mouse events are captured and logged
+- [?] (7) Verify no missed events
+- [?] (8) Close application cleanly
 
 **Success Criteria**: All keyboard and mouse events captured correctly
 
@@ -402,7 +402,7 @@ Upgrade to .NET 10.0
 
 **Phase 2: Validation**
 - TASK-009: Build Smoke Test ............... [ ]
-- TASK-010: Launch Smoke Test .............. [ ]
+- TASK-010: Launch Smoke Test .............. [?]
 - TASK-011: Hook Smoke Test ................ [ ]
 - TASK-012: Functional Testing ............. [ ]
 - TASK-013: Stability Testing .............. [ ]
