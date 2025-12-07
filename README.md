@@ -6,10 +6,6 @@
 
 A comprehensive Windows utility for monitoring keyboard/mouse activities and system performance. KeyPressCounter runs silently in the system tray, tracking user interaction patterns and system metrics without interfering with your workflow.
 
-<p align="center">
-  <img src="https://via.placeholder.com/600x300?text=KeyPressCounter+Screenshot" alt="KeyPressCounter Screenshot" width="600">
-</p>
-
 ## 🌟 Features
 
 ### Input Monitoring
