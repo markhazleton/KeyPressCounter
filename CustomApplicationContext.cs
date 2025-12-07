@@ -1,4 +1,5 @@
-﻿using Gma.System.MouseKeyHook;
+﻿using SharpHook;
+using SharpHook.Native;
 using System.Timers;
 using System.Diagnostics;
 using System.Text;
@@ -18,7 +19,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
     private readonly AppConfig config = null!;
     private readonly string dailyLogFilePath = null!;
     private System.Timers.Timer dailyLogTimer = null!;
-    private IKeyboardMouseEvents globalHook = null!;
+    private IGlobalHook globalHook = null!;
     private readonly Counter keyPressCounter = new();
     private readonly string logFilePath = null!;
     private System.Timers.Timer logTimer = null!;
@@ -498,9 +499,9 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
     {
         try
         {
-            globalHook = Hook.GlobalEvents();
+            globalHook = new TaskPoolGlobalHook();
             
-            globalHook.KeyPress += (sender, e) => 
+            globalHook.KeyPressed += (sender, e) => 
             {
                 // Skip tracking if user is idle and idle detection is enabled
                 if (config.DetectIdlePeriods && UserIdleDetector.IsUserIdle(config.IdleThresholdSeconds))
@@ -509,7 +510,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
                 keyPressCounter.Increment();
             };
             
-            globalHook.MouseClick += (sender, e) => 
+            globalHook.MousePressed += (sender, e) => 
             {
                 // Skip tracking if user is idle and idle detection is enabled
                 if (config.DetectIdlePeriods && UserIdleDetector.IsUserIdle(config.IdleThresholdSeconds))
@@ -517,6 +518,9 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
                     
                 mouseClickCounter.Increment();
             };
+            
+            // Start the hook on a background thread to avoid blocking
+            Task.Run(() => globalHook.RunAsync());
         }
         catch (Exception ex)
         {
