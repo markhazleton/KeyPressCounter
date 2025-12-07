@@ -17,10 +17,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include=".github\upgrades\COMPLETION-REPORT.md" />
+    <None Include=".github\upgrades\CONVERSION-SCRIPTS-README.md" />
+    <None Include=".github\upgrades\convert-presentation.bat" />
+    <None Include=".github\upgrades\convert-presentation.ps1" />
+    <None Include=".github\upgrades\QUICK-START-CONVERSION.md" />
     <None Include=".github\upgrades\SUMMARY.md" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SharpHook" Version="5.3.7" />
+    <PackageReference Include="SharpHook" Version="7.1.0" />
     <PackageReference Include="System.Management" Version="10.0.0" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.0" />
   </ItemGroup>
