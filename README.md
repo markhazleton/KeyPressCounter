@@ -1,7 +1,7 @@
 # KeyPressCounter 🖱️⌨️📊
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![.NET](https://img.shields.io/badge/.NET-9.0-512BD4)
+![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
 
 A comprehensive Windows utility for monitoring keyboard/mouse activities and system performance. KeyPressCounter runs silently in the system tray, tracking user interaction patterns and system metrics without interfering with your workflow.
@@ -44,16 +44,24 @@ A comprehensive Windows utility for monitoring keyboard/mouse activities and sys
   - System Information
 
 ### Logging and Data Management
-- **Detailed Activity Logs**: Automated logging of activity metrics at configurable intervals
-- **Daily Summary Reports**: Comprehensive end-of-day statistics
-- **Local Data Storage**: All data stored locally for privacy and security
+- **Detailed Activity Logs**: Automated logging of activity metrics at configurable intervals (default: 60 seconds)
+- **Daily Summary Reports**: Comprehensive end-of-day statistics with automatic reset
+- **Local Data Storage**: All data stored locally for privacy and security (Documents folder by default)
+- **Configuration Management**: JSON-based configuration stored in AppData with settings persistence
 - **Privacy-Focused Design**: Counts keystrokes without recording key content
+
+### Advanced Features
+- **Single Instance Protection**: Prevents multiple instances from running simultaneously
+- **User Idle Detection**: Native Windows API integration for accurate idle time detection
+- **Registry Integration**: Windows startup configuration managed through registry
+- **Exception Handling**: Comprehensive error handling with detailed logging and user notifications
+- **Configurable Idle Threshold**: Customizable idle detection period (default: 5 minutes)
 
 ## 📋 Prerequisites
 
 - Windows OS
-- .NET 9.0 Runtime
-- Administrative permissions (for global keyboard hooking and performance monitoring)
+- .NET 10.0 Runtime
+- Administrative permissions may be required for some performance monitoring features
 
 ## 🚀 Installation
 
@@ -103,22 +111,40 @@ To have KeyPressCounter start automatically with Windows:
 The dashboard provides a tabbed interface with:
 
 1. **Input Statistics Tab**:
-   - Total keystrokes and mouse clicks
-   - Maximum keystrokes and clicks per minute
-   - Longest period of inactivity
+   - Total keystrokes and mouse clicks since last reset
+   - Maximum keystrokes and clicks per minute (peak activity)
+   - Longest period of inactivity (in minutes)
+   - Real-time counter updates
 
 2. **System Performance Tab**:
-   - Current CPU and memory usage with real-time graphs
-   - Disk and network activity metrics
-   - System uptime
-   - Button to view detailed system information
+   - Current CPU and memory usage with real-time line graphs
+   - Historical data visualization (last 60 seconds)
+   - Disk read/write speeds in KB/s
+   - Network upload/download rates in KB/s
+   - System uptime display
+   - Direct access to detailed system information
+   - Graph legend with color-coded metrics
+   - Auto-refresh every second
 
 ### Log Files
 
 KeyPressCounter creates two log files in your Documents folder by default:
 
-- `ActivityLog.txt`: Detailed activity records at configured intervals
-- `DailySummaryLog.txt`: End-of-day statistical summaries
+- `ActivityLog.txt`: Detailed activity records logged at 60-second intervals (configurable)
+- `DailySummaryLog.txt`: End-of-day statistical summaries with automatic daily reset
+
+### Configuration File
+
+Configuration is stored in JSON format at:
+- Location: `%APPDATA%\MWH.KeyPressCounter\config.json`
+- Automatically created with defaults on first run
+- Includes settings for:
+  - Log directory path
+  - Log file names
+  - Logging interval (seconds)
+  - Startup with Windows preference
+  - Idle detection settings
+  - Idle threshold (seconds)
 
 ## 🛠️ Building from Source
 
@@ -130,23 +156,41 @@ git clone https://github.com/MarkHazleton/KeyPressCounter.git
 cd KeyPressCounter
 
 # Build the project
-dotnet build KeyLogger.sln --configuration Release
+dotnet build MWH.KeyPressCounter.csproj --configuration Release
 
 # Run the application
 dotnet run --project MWH.KeyPressCounter.csproj
 ```
 
+### Dependencies
+The project uses the following NuGet packages:
+- **SharpHook** (v7.1.0) - Global keyboard and mouse event hooking
+- **System.Management** (v10.0.0) - WMI access for hardware information
+- **System.Diagnostics.PerformanceCounter** (v10.0.0) - System performance metrics
+
 ## 🔍 How It Works
 
 KeyPressCounter combines several technologies to provide comprehensive monitoring:
 
-1. **Input Tracking**: Uses the [MouseKeyHook](https://github.com/gmamaladze/globalmousekeyhook) library to establish global keyboard and mouse hooks
-2. **Performance Monitoring**: Leverages Windows Performance Counters for system metrics
-3. **System Information**: Utilizes Windows Management Instrumentation (WMI) for hardware details
-4. **Process Analysis**: Uses the .NET Process API to monitor running applications
-5. **Data Visualization**: Implements custom drawing routines for real-time performance graphs
+1. **Input Tracking**: Uses the [SharpHook](https://github.com/TolikPylypchuk/SharpHook) library (v7.1.0) with TaskPoolGlobalHook for efficient global keyboard and mouse event monitoring
+2. **Performance Monitoring**: Leverages Windows Performance Counters (System.Diagnostics.PerformanceCounter) for real-time system metrics including:
+   - CPU usage (Processor - % Processor Time)
+   - Memory availability (Memory - Available MBytes)
+   - System uptime (System - System Up Time)
+   - Disk I/O (PhysicalDisk - Bytes/sec)
+   - Network activity (Network Interface - Bytes Sent/Received per sec)
+3. **System Information**: Utilizes Windows Management Instrumentation (WMI) via System.Management for hardware details:
+   - CPU name and specifications
+   - Total physical memory
+   - GPU information
+   - Drive space and configuration
+4. **Idle Detection**: Integrates with Windows User32.dll API using GetLastInputInfo for accurate user idle time calculation
+5. **Process Analysis**: Uses the .NET Process API to monitor and display top CPU and memory-consuming applications
+6. **Data Visualization**: Implements custom GDI+ drawing routines with anti-aliasing for smooth real-time performance graphs
+7. **Configuration Management**: JSON serialization for settings persistence with automatic Registry integration for Windows startup
+8. **Single Instance Enforcement**: Process enumeration to prevent multiple application instances
 
-All data is processed through thread-safe counters and displayed in an intuitive interface.
+All data is processed through thread-safe Counter classes with proper locking mechanisms and displayed in an intuitive Windows Forms interface.
 
 ## 🔒 Privacy & Ethics
 
@@ -175,12 +219,60 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+### Development Guidelines
+- Maintain thread-safe operations for all counter modifications
+- Follow existing code documentation standards with XML comments
+- Ensure proper disposal of system resources (Performance Counters, WMI objects)
+- Test with different Windows versions and .NET runtime versions
+- Maintain backward compatibility for configuration files
+
+## 🐛 Known Issues & Limitations
+
+- Network interface performance counters may fail on some systems; the app will fallback to the first available interface
+- GPU information retrieval may not work on all hardware configurations
+- Performance counter initialization requires sufficient system permissions
+- The application icon (favicon.ico) must be present in the application directory
+
+## 📊 Performance Considerations
+
+- Logging interval can be adjusted to reduce I/O operations (default: 60 seconds)
+- Performance counter polling runs at 1-second intervals for the dashboard
+- Historical graph data is limited to 60 data points to minimize memory usage
+- Global hook events are processed asynchronously to prevent input lag
+- Idle time detection uses native Windows API for minimal overhead
+
+## 🔧 Troubleshooting
+
+### Application Won't Start
+- Ensure .NET 10.0 runtime is installed
+- Check that no other instance is already running (look in system tray)
+- Verify favicon.ico exists in the application directory
+
+### Performance Counters Not Working
+- Run as Administrator for full performance monitoring capabilities
+- Ensure Windows Performance Counter service is running
+- Rebuild performance counter library: `lodctr /r` in elevated command prompt
+
+### Configuration Not Saving
+- Check write permissions to `%APPDATA%\MWH.KeyPressCounter\` directory
+- Verify disk space is available
+- Review application logs for serialization errors
+
+### Network Counters Failing
+- Verify network interfaces are properly configured in Windows
+- Check Network Interface performance counter category exists
+- Application will attempt to use fallback interface automatically
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 📞 Contact
 
-Mark Hazleton - [@YourTwitterHandle](https://twitter.com/YourTwitterHandle)
+Mark Hazleton - GitHub: [@MarkHazleton](https://github.com/MarkHazleton)
 
 Project Link: [https://github.com/MarkHazleton/KeyPressCounter](https://github.com/MarkHazleton/KeyPressCounter)
+
+---
+
+**Note**: This tool is intended for personal productivity tracking and system monitoring. Always ensure compliance with local laws and organizational policies regarding monitoring software.
