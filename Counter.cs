@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace MWH.KeyPressCounter;
+﻿namespace MWH.KeyPressCounter;
 
 /// <summary>
 /// Provides counting functionality with thread-safe operations for tracking key presses and mouse clicks.

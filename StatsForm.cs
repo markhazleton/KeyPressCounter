@@ -1,6 +1,5 @@
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
-using System.Text;
 
 namespace MWH.KeyPressCounter
 {
@@ -109,7 +108,7 @@ namespace MWH.KeyPressCounter
             if (networkUploadHistory.Count > 60) networkUploadHistory.Dequeue();
         }
         
-        private void perfGraphPanel_Paint(object sender, PaintEventArgs e)
+        private void perfGraphPanel_Paint(object? sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -118,7 +117,8 @@ namespace MWH.KeyPressCounter
             int height = perfGraphPanel.Height;
             
             // Draw background
-            g.FillRectangle(new SolidBrush(Color.FromArgb(240, 240, 240)), 0, 0, width, height);
+            using (var bgBrush = new SolidBrush(Color.FromArgb(240, 240, 240)))
+                g.FillRectangle(bgBrush, 0, 0, width, height);
             
             // Draw CPU usage graph
             if (cpuHistory.Count > 1)
@@ -176,16 +176,18 @@ namespace MWH.KeyPressCounter
             int legendX = width - 150;
             
             // CPU Legend
-            g.FillRectangle(new SolidBrush(Color.FromArgb(220, 0, 0)), legendX, legendY, 15, 15);
+            using (var cpuBrush = new SolidBrush(Color.FromArgb(220, 0, 0)))
+                g.FillRectangle(cpuBrush, legendX, legendY, 15, 15);
             g.DrawString("CPU", Font, Brushes.Black, legendX + 20, legendY);
-            
+
             // Memory Legend
             legendY += 20;
-            g.FillRectangle(new SolidBrush(Color.FromArgb(0, 180, 0)), legendX, legendY, 15, 15);
+            using (var memBrush = new SolidBrush(Color.FromArgb(0, 180, 0)))
+                g.FillRectangle(memBrush, legendX, legendY, 15, 15);
             g.DrawString("Memory", Font, Brushes.Black, legendX + 20, legendY);
         }
         
-        private void systemInfoButton_Click(object sender, EventArgs e)
+        private void systemInfoButton_Click(object? sender, EventArgs e)
         {
             // Display detailed system information
             MessageBox.Show(performanceMonitor.GetSystemInfo(), "System Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -204,7 +206,7 @@ namespace MWH.KeyPressCounter
         
         #region Windows Form Designer generated code
 
-        private System.ComponentModel.IContainer components = null;
+        private System.ComponentModel.IContainer components = null!;
 
         private void InitializeComponent()
         {
@@ -348,7 +350,7 @@ namespace MWH.KeyPressCounter
             this.systemInfoButton.TabIndex = 9;
             this.systemInfoButton.Text = "System Information";
             this.systemInfoButton.UseVisualStyleBackColor = true;
-            this.systemInfoButton.Click += new System.EventHandler(this.systemInfoButton_Click);
+            this.systemInfoButton.Click += systemInfoButton_Click;
             // 
             // uptimeLabel
             // 
@@ -440,7 +442,7 @@ namespace MWH.KeyPressCounter
             this.perfGraphPanel.Name = "perfGraphPanel";
             this.perfGraphPanel.Size = new System.Drawing.Size(536, 175);
             this.perfGraphPanel.TabIndex = 10;
-            this.perfGraphPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.perfGraphPanel_Paint);
+            this.perfGraphPanel.Paint += perfGraphPanel_Paint;
             // 
             // StatsForm
             // 
@@ -463,24 +465,24 @@ namespace MWH.KeyPressCounter
 
         #endregion
 
-        private TabControl tabControl;
-        private TabPage inputStatsTab;
-        private TabPage sysPerformanceTab;
-        private Label inputStatsHeaderLabel;
-        private Label keystrokesPerMinuteLabel;
-        private Label keystrokeCountLabel;
-        private Label mouseClicksPerMinuteLabel;
-        private Label mouseClickCountLabel;
-        private Label longestIdleLabel;
-        private Label performanceHeaderLabel;
-        private Label cpuUsageLabel;
-        private Label memoryUsageLabel;
-        private Label diskReadLabel;
-        private Label diskWriteLabel;
-        private Label networkDownloadLabel;
-        private Label networkUploadLabel;
-        private Label uptimeLabel;
-        private Button systemInfoButton;
-        private Panel perfGraphPanel;
+        private TabControl tabControl = null!;
+        private TabPage inputStatsTab = null!;
+        private TabPage sysPerformanceTab = null!;
+        private Label inputStatsHeaderLabel = null!;
+        private Label keystrokesPerMinuteLabel = null!;
+        private Label keystrokeCountLabel = null!;
+        private Label mouseClicksPerMinuteLabel = null!;
+        private Label mouseClickCountLabel = null!;
+        private Label longestIdleLabel = null!;
+        private Label performanceHeaderLabel = null!;
+        private Label cpuUsageLabel = null!;
+        private Label memoryUsageLabel = null!;
+        private Label diskReadLabel = null!;
+        private Label diskWriteLabel = null!;
+        private Label networkDownloadLabel = null!;
+        private Label networkUploadLabel = null!;
+        private Label uptimeLabel = null!;
+        private Button systemInfoButton = null!;
+        private Panel perfGraphPanel = null!;
     }
 }

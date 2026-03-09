@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace MWH.KeyPressCounter;
 
@@ -54,11 +53,11 @@ internal static class Program
     /// <returns>True if another instance is running, false otherwise.</returns>
     private static bool IsApplicationAlreadyRunning()
     {
-        Process currentProcess = Process.GetCurrentProcess();
+        using Process currentProcess = Process.GetCurrentProcess();
         Process[] processes = Process.GetProcessesByName(currentProcess.ProcessName);
-        
-        // If there's more than one process with the same name, the application is already running
-        return processes.Length > 1;
+        bool alreadyRunning = processes.Length > 1;
+        foreach (Process p in processes) p.Dispose();
+        return alreadyRunning;
     }
 
     /// <summary>

@@ -27,7 +27,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
     private NotifyIcon trayIcon = null!;
     
     // System performance monitoring
-    private readonly SystemPerformanceMonitor performanceMonitor;
+    private readonly SystemPerformanceMonitor performanceMonitor = null!;
     
     // Statistics form
     private StatsForm? statsForm;
@@ -393,7 +393,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
         {
             trayIcon = new NotifyIcon()
             {
-                Icon = new Icon(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "favicon.ico")),
+                Icon = new Icon(Path.Combine(AppContext.BaseDirectory, "favicon.ico")),
                 ContextMenuStrip = CreateContextMenu(),
                 Visible = true,
                 Text = "KeyPressCounter - Double Click for Stats"
@@ -536,24 +536,6 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
     {
         // Open the statistics form instead of just showing a balloon tip
         ShowOrActivateStatsForm();
-    }
-
-    /// <summary>
-    /// Updates the system tray icon tooltip with current statistics.
-    /// </summary>
-    private void UpdateTrayIconText()
-    {
-        StringBuilder sb = new();
-        
-        // Input statistics
-        sb.AppendLine($"Keystrokes: {keyPressCounter.TotalCount} (Max/min: {keyPressCounter.MaxPerInterval})");
-        sb.AppendLine($"Mouse Clicks: {mouseClickCounter.TotalCount} (Max/min: {mouseClickCounter.MaxPerInterval})");
-        
-        // Include basic system performance info
-        sb.AppendLine($"CPU: {performanceMonitor.CpuUsagePercent:F1}%");
-        sb.AppendLine($"Memory: {performanceMonitor.MemoryUsagePercent:F1}%");
-                     
-        trayIcon.ShowBalloonTip(LONG_NOTIFICATION_DURATION, "KeyPressCounter Stats", sb.ToString(), ToolTipIcon.Info);
     }
 
     #region IDisposable Implementation

@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Net.NetworkInformation;
 using Microsoft.Win32;
@@ -26,7 +25,6 @@ public class SystemPerformanceMonitor : IDisposable
     private string osVersion = string.Empty;
     private long totalMemoryBytes;
     private int processorCount;
-    private string machineUptime = string.Empty;
     
     /// <summary>
     /// Initializes a new instance of the SystemPerformanceMonitor class.
