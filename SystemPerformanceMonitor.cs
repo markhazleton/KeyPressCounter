@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Management;
 using System.Text;
 using System.Net.NetworkInformation;
+using System.Globalization;
 using Microsoft.Win32;
 
 namespace MWH.KeyPressCounter;
@@ -251,11 +252,11 @@ public class SystemPerformanceMonitor : IDisposable
     {
         StringBuilder sb = new();
         sb.AppendLine("--- System Performance ---");
-        sb.AppendLine($"CPU: {CpuUsagePercent:F1}%");
-        sb.AppendLine($"RAM: {MemoryUsagePercent:F1}% ({(TotalMemoryGB - (AvailableMemoryMB / 1024)):F1}GB of {TotalMemoryGB:F1}GB)");
-        sb.AppendLine($"Disk I/O: {DiskReadKBPerSec:F1} KB/s read, {DiskWriteKBPerSec:F1} KB/s write");
-        sb.AppendLine($"Network: {NetworkDownloadKBPerSec:F1} KB/s down, {NetworkUploadKBPerSec:F1} KB/s up");
-        sb.AppendLine($"Uptime: {SystemUptime}");
+        sb.AppendLine(FormattableString.Invariant($"CPU: {CpuUsagePercent:F1}%"));
+        sb.AppendLine(FormattableString.Invariant($"RAM: {MemoryUsagePercent:F1}% ({(TotalMemoryGB - (AvailableMemoryMB / 1024)):F1}GB of {TotalMemoryGB:F1}GB)"));
+        sb.AppendLine(FormattableString.Invariant($"Disk I/O: {DiskReadKBPerSec:F1} KB/s read, {DiskWriteKBPerSec:F1} KB/s write"));
+        sb.AppendLine(FormattableString.Invariant($"Network: {NetworkDownloadKBPerSec:F1} KB/s down, {NetworkUploadKBPerSec:F1} KB/s up"));
+        sb.AppendLine(FormattableString.Invariant($"Uptime: {SystemUptime}"));
         return sb.ToString();
     }
     
@@ -266,17 +267,17 @@ public class SystemPerformanceMonitor : IDisposable
     {
         StringBuilder sb = new();
         sb.AppendLine("--- System Information ---");
-        sb.AppendLine($"OS: {OsVersion}");
-        sb.AppendLine($"CPU: {CpuName}");
-        sb.AppendLine($"Cores: {ProcessorCount}");
-        sb.AppendLine($"RAM: {TotalMemoryGB:F1} GB");
+        sb.AppendLine(FormattableString.Invariant($"OS: {OsVersion}"));
+        sb.AppendLine(FormattableString.Invariant($"CPU: {CpuName}"));
+        sb.AppendLine(FormattableString.Invariant($"Cores: {ProcessorCount}"));
+        sb.AppendLine(FormattableString.Invariant($"RAM: {TotalMemoryGB:F1} GB"));
         
         // Add more system information like GPU, disk space, etc.
         try
         {
             string gpuInfo = GetGpuInfo();
             if (!string.IsNullOrEmpty(gpuInfo))
-                sb.AppendLine($"GPU: {gpuInfo}");
+                sb.AppendLine(FormattableString.Invariant($"GPU: {gpuInfo}"));
         }
         catch (Exception ex)
         {
@@ -293,7 +294,7 @@ public class SystemPerformanceMonitor : IDisposable
                 {
                     double totalGB = drive.TotalSize / (1024.0 * 1024.0 * 1024.0);
                     double freeGB = drive.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0);
-                    sb.AppendLine($"  {drive.Name} {freeGB:F1} GB free of {totalGB:F1} GB");
+                    sb.AppendLine(FormattableString.Invariant($"  {drive.Name} {freeGB:F1} GB free of {totalGB:F1} GB"));
                 }
             }
         }
@@ -333,7 +334,7 @@ public class SystemPerformanceMonitor : IDisposable
     /// <summary>
     /// Gets the CPU name from the registry.
     /// </summary>
-    private string GetCpuName()
+    private static string GetCpuName()
     {
         try
         {
@@ -354,7 +355,7 @@ public class SystemPerformanceMonitor : IDisposable
     /// <summary>
     /// Gets the operating system version and name.
     /// </summary>
-    private string GetOperatingSystemInfo()
+    private static string GetOperatingSystemInfo()
     {
         try
         {
@@ -381,7 +382,7 @@ public class SystemPerformanceMonitor : IDisposable
     /// <summary>
     /// Gets the total physical memory installed on the system.
     /// </summary>
-    private long GetTotalPhysicalMemory()
+    private static long GetTotalPhysicalMemory()
     {
         try
         {
@@ -391,7 +392,7 @@ public class SystemPerformanceMonitor : IDisposable
             {
                 if (mo["TotalPhysicalMemory"] != null)
                 {
-                    return Convert.ToInt64(mo["TotalPhysicalMemory"]);
+                    return Convert.ToInt64(mo["TotalPhysicalMemory"], CultureInfo.InvariantCulture);
                 }
             }
             return 0;
@@ -406,7 +407,7 @@ public class SystemPerformanceMonitor : IDisposable
     /// <summary>
     /// Gets information about the GPU.
     /// </summary>
-    private string GetGpuInfo()
+    private static string GetGpuInfo()
     {
         try
         {
@@ -429,7 +430,7 @@ public class SystemPerformanceMonitor : IDisposable
     /// <summary>
     /// Gets the primary network interface name.
     /// </summary>
-    private string GetPrimaryNetworkInterface()
+    private static string GetPrimaryNetworkInterface()
     {
         try
         {
@@ -475,5 +476,6 @@ public class SystemPerformanceMonitor : IDisposable
         diskWriteCounter?.Dispose();
         networkSendCounter?.Dispose();
         networkReceiveCounter?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

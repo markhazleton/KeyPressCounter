@@ -1,0 +1,94 @@
+name: Release On Tag
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore MWH.KeyPressCounter.csproj
+
+      - name: Build
+        run: dotnet build MWH.KeyPressCounter.csproj --configuration Release --no-restore
+
+      - name: Publish win-x64
+        run: dotnet publish MWH.KeyPressCounter.csproj --configuration Release --runtime win-x64 --self-contained false --no-build -o artifacts/win-x64
+
+      - name: Create zip package
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $zipPath = "artifacts/KeyPressCounter-$tag-win-x64.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          Compress-Archive -Path "artifacts/win-x64/*" -DestinationPath $zipPath
+
+      - name: Publish GitHub release
+        id: publish_release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: artifacts/KeyPressCounter-${{ github.ref_name }}-win-x64.zip
+
+      - name: Update changelog from release notes
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $date = Get-Date -Format "yyyy-MM-dd"
+          $notes = gh release view $tag --json body --jq .body
+
+          if ([string]::IsNullOrWhiteSpace($notes)) {
+            throw "Could not retrieve release notes for $tag"
+          }
+
+          git fetch origin main
+          git checkout main
+
+          $changelogPath = "CHANGELOG.md"
+          if (-not (Test-Path $changelogPath)) {
+            @"
+# Changelog
+
+## Releases
+"@ | Set-Content -Path $changelogPath -Encoding UTF8
+          }
+
+          $heading = "## $tag - $date"
+          $existing = Get-Content -Path $changelogPath -Raw
+          if ($existing -match [regex]::Escape($heading)) {
+            Write-Host "Changelog already contains $heading"
+            exit 0
+          }
+
+          $entry = @"
+
+$heading
+
+$notes
+"@
+
+          Add-Content -Path $changelogPath -Value $entry -Encoding UTF8
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog for $tag"
+          git push origin main

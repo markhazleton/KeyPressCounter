@@ -17,6 +17,7 @@ namespace MWH.KeyPressCounter
         private readonly Queue<float> diskWriteHistory = new(60);
         private readonly Queue<float> networkDownloadHistory = new(60);
         private readonly Queue<float> networkUploadHistory = new(60);
+        private readonly ToolTip toolTip = new();
 
         // Color palette
         private static readonly Color PrimaryColor     = Color.FromArgb(21, 101, 192);
@@ -117,8 +118,11 @@ namespace MWH.KeyPressCounter
             int width  = perfGraphPanel.Width;
             int height = perfGraphPanel.Height;
 
-            // Dark background
-            using (var bgBrush = new SolidBrush(Color.FromArgb(18, 28, 45)))
+            // Respect high contrast mode to keep the graph readable.
+            Color graphBackground = SystemInformation.HighContrast
+                ? SystemColors.Window
+                : Color.FromArgb(18, 28, 45);
+            using (var bgBrush = new SolidBrush(graphBackground))
                 g.FillRectangle(bgBrush, 0, 0, width, height);
 
             // Grid lines at 25%, 50%, 75%, 100%
@@ -199,6 +203,7 @@ namespace MWH.KeyPressCounter
             {
                 refreshTimer.Stop();
                 refreshTimer.Dispose();
+                toolTip.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -271,6 +276,8 @@ namespace MWH.KeyPressCounter
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size          = new Size(640, 530);
             this.tabControl.TabIndex      = 0;
+            this.tabControl.AccessibleName = "Statistics Tabs";
+            this.tabControl.AccessibleDescription = "Switch between input statistics, system performance, and about information.";
 
             // ══════════════════════════════════════════════════════════════
             // INPUT STATISTICS TAB
@@ -279,7 +286,7 @@ namespace MWH.KeyPressCounter
             this.inputStatsTab.Name      = "inputStatsTab";
             this.inputStatsTab.Padding   = new Padding(0);
             this.inputStatsTab.TabIndex  = 0;
-            this.inputStatsTab.Text      = "Input Statistics";
+            this.inputStatsTab.Text      = "&Input Statistics";
 
             // Header panel
             this.inputHeaderPanel.Dock      = DockStyle.Top;
@@ -396,7 +403,7 @@ namespace MWH.KeyPressCounter
             this.sysPerformanceTab.Name      = "sysPerformanceTab";
             this.sysPerformanceTab.Padding   = new Padding(0);
             this.sysPerformanceTab.TabIndex  = 1;
-            this.sysPerformanceTab.Text      = "System Performance";
+            this.sysPerformanceTab.Text      = "&System Performance";
 
             this.perfHeaderPanel.Dock      = DockStyle.Top;
             this.perfHeaderPanel.Height    = 52;
@@ -488,12 +495,14 @@ namespace MWH.KeyPressCounter
             this.uptimeLabel.Location  = new Point(16, 285);
             this.sysPerformanceTab.Controls.Add(this.uptimeLabel);
 
-            this.systemInfoButton.Text      = "System Information…";
+            this.systemInfoButton.Text      = "&System Information...";
             this.systemInfoButton.Font      = new Font("Segoe UI", 9.5f);
             this.systemInfoButton.Location  = new Point(430, 280);
             this.systemInfoButton.Size      = new Size(176, 30);
             this.systemInfoButton.FlatStyle = FlatStyle.System;
             this.systemInfoButton.TabIndex  = 9;
+            this.systemInfoButton.AccessibleName = "System Information";
+            this.systemInfoButton.AccessibleDescription = "Opens a dialog with detailed system hardware information.";
             this.systemInfoButton.Click    += systemInfoButton_Click;
             this.sysPerformanceTab.Controls.Add(this.systemInfoButton);
 
@@ -504,6 +513,8 @@ namespace MWH.KeyPressCounter
             this.perfGraphPanel.Location    = new Point(16, 320);
             this.perfGraphPanel.Size        = new Size(590, 155);
             this.perfGraphPanel.TabIndex    = 10;
+            this.perfGraphPanel.AccessibleName = "CPU and Memory History Graph";
+            this.perfGraphPanel.AccessibleDescription = "Shows recent CPU and memory usage history for the last 60 seconds.";
             this.perfGraphPanel.Paint      += perfGraphPanel_Paint;
             this.sysPerformanceTab.Controls.Add(this.perfGraphPanel);
 
@@ -514,7 +525,7 @@ namespace MWH.KeyPressCounter
             this.aboutTab.Name      = "aboutTab";
             this.aboutTab.Padding   = new Padding(0);
             this.aboutTab.TabIndex  = 2;
-            this.aboutTab.Text      = "About";
+            this.aboutTab.Text      = "&About";
 
             this.aboutHeaderPanel.Dock      = DockStyle.Top;
             this.aboutHeaderPanel.Height    = 52;
@@ -614,7 +625,7 @@ namespace MWH.KeyPressCounter
             this.aboutTechLabel.Text =
                 "  \u2022  .NET 10.0 / Windows Forms\r\n" +
                 "  \u2022  SharpHook v7.1.1  — global keyboard & mouse hook (MIT)\r\n" +
-                "  \u2022  System.Management v10.0.3  — WMI hardware information\r\n" +
+                "  \u2022  System.Management v10.0.5  — WMI hardware information\r\n" +
                 "  \u2022  Windows Performance Counters  — CPU, memory, disk, network metrics";
             this.aboutTechLabel.Font      = new Font("Segoe UI", 9.5f);
             this.aboutTechLabel.ForeColor = Color.FromArgb(55, 55, 55);
@@ -664,6 +675,10 @@ namespace MWH.KeyPressCounter
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text          = "KeyPressCounter Statistics";
             this.BackColor     = FormBackground;
+            this.KeyPreview    = true;
+
+            toolTip.SetToolTip(this.systemInfoButton, "Open detailed hardware and system information.");
+            toolTip.SetToolTip(this.perfGraphPanel, "CPU and memory usage history over the last minute.");
 
             this.tabControl.ResumeLayout(false);
             this.ResumeLayout(false);

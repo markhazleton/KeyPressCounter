@@ -1,0 +1,44 @@
+name: Package Health
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+jobs:
+  package-health:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore MWH.KeyPressCounter.csproj
+
+      - name: Build
+        run: dotnet build MWH.KeyPressCounter.csproj --configuration Release --no-restore
+
+      - name: Check vulnerable packages
+        shell: pwsh
+        run: |
+          $output = dotnet list MWH.KeyPressCounter.csproj package --vulnerable --include-transitive
+          $output | Out-String | Write-Host
+          if ($output -match "has no vulnerable packages") {
+            Write-Host "No known vulnerable packages found."
+            exit 0
+          }
+
+          Write-Error "Vulnerable package(s) detected."
+          exit 1
+
+      - name: Report outdated packages
+        shell: pwsh
+        run: |
+          dotnet list MWH.KeyPressCounter.csproj package --outdated --include-transitive

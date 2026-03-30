@@ -36,7 +36,7 @@ public class AppConfig
     /// <summary>
     /// Gets or sets whether the application should start with Windows.
     /// </summary>
-    public bool StartWithWindows { get; set; } = false;
+    public bool StartWithWindows { get; set; }
 
     /// <summary>
     /// Gets or sets whether the application should minimize to the system tray on startup.
@@ -60,6 +60,11 @@ public class AppConfig
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         APP_NAME,
         "config.json");
+
+    private static readonly JsonSerializerOptions SerializerOptions = new()
+    {
+        WriteIndented = true
+    };
 
     /// <summary>
     /// Gets the full path to the activity log file.
@@ -191,12 +196,7 @@ public class AppConfig
                 Directory.CreateDirectory(directoryPath);
             }
 
-            var options = new JsonSerializerOptions 
-            { 
-                WriteIndented = true
-            };
-            
-            string json = JsonSerializer.Serialize(this, options);
+            string json = JsonSerializer.Serialize(this, SerializerOptions);
             File.WriteAllText(ConfigFilePath, json);
             return true;
         }

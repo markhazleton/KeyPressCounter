@@ -135,7 +135,7 @@ dotnet run --project MWH.KeyPressCounter.csproj
 | Package | Version | Purpose |
 |---|---|---|
 | [SharpHook](https://github.com/TolikPylypchuk/SharpHook) | 7.1.1 | Global keyboard and mouse event hooking |
-| [System.Management](https://www.nuget.org/packages/System.Management) | 10.0.3 | WMI access for hardware information |
+| [System.Management](https://www.nuget.org/packages/System.Management) | 10.0.5 | WMI access for hardware information |
 
 Windows Performance Counters (`System.Diagnostics.PerformanceCounter`) and User32 P/Invoke (`GetLastInputInfo`) are part of the .NET Windows platform and require no additional packages.
 

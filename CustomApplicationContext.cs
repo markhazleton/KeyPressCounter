@@ -3,6 +3,7 @@ using SharpHook.Native;
 using System.Timers;
 using System.Diagnostics;
 using System.Text;
+using System.Globalization;
 
 namespace MWH.KeyPressCounter;
 
@@ -19,7 +20,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
     private readonly AppConfig config = null!;
     private readonly string dailyLogFilePath = null!;
     private System.Timers.Timer dailyLogTimer = null!;
-    private IGlobalHook globalHook = null!;
+    private TaskPoolGlobalHook? globalHook;
     private readonly Counter keyPressCounter = new();
     private readonly string logFilePath = null!;
     private System.Timers.Timer logTimer = null!;
@@ -270,9 +271,9 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
                 try
                 {
                     // Format process info
-                    string cpuTime = proc.TotalProcessorTime.TotalSeconds.ToString("F1");
-                    string memoryMB = (proc.WorkingSet64 / (1024.0 * 1024.0)).ToString("F1");
-                    sb.AppendLine($"{proc.ProcessName} (ID: {proc.Id}): CPU: {cpuTime}s, Memory: {memoryMB} MB");
+                    string cpuTime = proc.TotalProcessorTime.TotalSeconds.ToString("F1", CultureInfo.InvariantCulture);
+                    string memoryMB = (proc.WorkingSet64 / (1024.0 * 1024.0)).ToString("F1", CultureInfo.InvariantCulture);
+                    sb.AppendLine(FormattableString.Invariant($"{proc.ProcessName} (ID: {proc.Id}): CPU: {cpuTime}s, Memory: {memoryMB} MB"));
                 }
                 catch (Exception ex)
                 {
@@ -293,8 +294,8 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
             {
                 try
                 {
-                    string memoryMB = (proc.WorkingSet64 / (1024.0 * 1024.0)).ToString("F1");
-                    sb.AppendLine($"{proc.ProcessName} (ID: {proc.Id}): Memory: {memoryMB} MB");
+                    string memoryMB = (proc.WorkingSet64 / (1024.0 * 1024.0)).ToString("F1", CultureInfo.InvariantCulture);
+                    sb.AppendLine(FormattableString.Invariant($"{proc.ProcessName} (ID: {proc.Id}): Memory: {memoryMB} MB"));
                 }
                 catch (Exception ex)
                 {
@@ -377,7 +378,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
     /// <summary>
     /// Calculates the time remaining until the end of the current day.
     /// </summary>
-    private TimeSpan GetRemainingTimeUntilEndOfDay()
+    private static TimeSpan GetRemainingTimeUntilEndOfDay()
     {
         DateTime now = DateTime.Now;
         DateTime endOfDay = new DateTime(now.Year, now.Month, now.Day).AddDays(1);
@@ -404,7 +405,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
         catch (Exception ex)
         {
             Debug.WriteLine($"Failed to initialize application context: {ex}");
-            throw new ApplicationException($"Failed to initialize application context: {ex.Message}", ex);
+            throw new InvalidOperationException($"Failed to initialize application context: {ex.Message}", ex);
         }
     }
 
@@ -525,7 +526,7 @@ public class CustomApplicationContext : ApplicationContext, IDisposable
         catch (Exception ex)
         {
             Debug.WriteLine($"Failed to set up global hooks: {ex}");
-            throw new ApplicationException($"Failed to set up global hooks: {ex.Message}", ex);
+            throw new InvalidOperationException($"Failed to set up global hooks: {ex.Message}", ex);
         }
     }
 
