@@ -1,0 +1,80 @@
+name: Update Changelog On Release
+
+"on":
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Append release notes to changelog
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${RELEASE_TAG:-}" ]; then
+            echo "No release payload found; skipping changelog update."
+            exit 0
+          fi
+
+          CHANGELOG_FILE="CHANGELOG.md"
+          DATE_UTC="$(date -u +%Y-%m-%d)"
+          HEADING="## ${RELEASE_TAG} - ${DATE_UTC}"
+
+          if [ ! -f "$CHANGELOG_FILE" ]; then
+            cat > "$CHANGELOG_FILE" <<'EOF'
+# Changelog
+
+All notable changes to this project are documented here.
+
+This file is updated automatically from GitHub release notes when a version tag is published.
+
+## Releases
+EOF
+          fi
+
+          if grep -Fq "$HEADING" "$CHANGELOG_FILE"; then
+            echo "Changelog already has entry for ${RELEASE_TAG}."
+            exit 0
+          fi
+
+          {
+            echo ""
+            echo "$HEADING"
+            echo ""
+            if [ -n "${RELEASE_BODY:-}" ]; then
+              printf '%s\n' "$RELEASE_BODY"
+            else
+              echo "Release notes were generated in GitHub Releases."
+            fi
+          } >> "$CHANGELOG_FILE"
+
+      - name: Commit changelog update
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "No changelog changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog for release ${GITHUB_REF_NAME}"
+          git push origin main
