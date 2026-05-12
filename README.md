@@ -5,6 +5,8 @@
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
 ![C#](https://img.shields.io/badge/C%23-13-239120)
 
+**Live Site**: [https://github.com/markhazleton/KeyPressCounter](https://github.com/markhazleton/KeyPressCounter)
+
 A lightweight Windows system tray utility that monitors keyboard and mouse input patterns alongside real-time system performance metrics. KeyPressCounter runs silently in the background, tracking your activity without recording what you type and without transmitting any data.
 
 ## Features
@@ -274,13 +276,23 @@ When using this tool in an organizational context, obtain explicit consent from 
 
 ---
 
+## About
+
+KeyPressCounter demonstrates real-time Windows input and performance monitoring as a lightweight system tray utility. All data is stored locally; no keystrokes are recorded and no information is transmitted over the network.
+
+> Built by [Mark Hazleton](https://markhazleton.com) — Mark Hazleton, Solutions Architect
+> KeyPressCounter is part of the [Make Bold Spark](https://makeboldspark.com) portfolio of technical demonstrations.
+
+---
+
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
 
 ## Contact
 
-**Mark Hazleton** — [github.com/MarkHazleton](https://github.com/MarkHazleton)
+**Mark Hazleton** — [markhazleton.com](https://markhazleton.com)
 
+GitHub: [github.com/MarkHazleton](https://github.com/MarkHazleton)
 Project: [github.com/MarkHazleton/KeyPressCounter](https://github.com/MarkHazleton/KeyPressCounter)
 Issues: [github.com/MarkHazleton/KeyPressCounter/issues](https://github.com/MarkHazleton/KeyPressCounter/issues)

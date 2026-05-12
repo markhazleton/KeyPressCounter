@@ -197,6 +197,22 @@ namespace MWH.KeyPressCounter
             }
         }
 
+        private void markhazletonLinkLabel_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://markhazleton.com",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error opening link: {ex.Message}");
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -255,7 +271,8 @@ namespace MWH.KeyPressCounter
             this.aboutTitleLabel   = new Label();
             this.aboutVersionLabel = new Label();
             this.aboutDescLabel    = new Label();
-            this.githubLinkLabel   = new LinkLabel();
+            this.githubLinkLabel         = new LinkLabel();
+            this.markhazletonLinkLabel   = new LinkLabel();
             this.aboutTechLabel    = new Label();
             this.aboutLicenseLabel = new Label();
             this.aboutPrivacyLabel = new Label();
@@ -585,7 +602,7 @@ namespace MWH.KeyPressCounter
             {
                 BackColor = CardBackground,
                 Location  = new Point(16, y),
-                Size      = new Size(590, 75)
+                Size      = new Size(590, 110)
             };
             aboutScroll.Controls.Add(authorCard);
             authorCard.Controls.Add(MakeSectionHeader("Author", new Point(14, 10)));
@@ -610,7 +627,27 @@ namespace MWH.KeyPressCounter
             this.githubLinkLabel.LinkClicked += githubLinkLabel_LinkClicked;
             authorCard.Controls.Add(this.githubLinkLabel);
 
-            y += 87;
+            this.markhazletonLinkLabel.Text      = "markhazleton.com";
+            this.markhazletonLinkLabel.Font      = new Font("Segoe UI", 10f);
+            this.markhazletonLinkLabel.LinkColor = PrimaryColor;
+            this.markhazletonLinkLabel.AutoSize  = true;
+            this.markhazletonLinkLabel.Location  = new Point(14, 58);
+            this.markhazletonLinkLabel.Links.Clear();
+            this.markhazletonLinkLabel.Links.Add(0, this.markhazletonLinkLabel.Text.Length, "https://markhazleton.com");
+            this.markhazletonLinkLabel.LinkClicked += markhazletonLinkLabel_LinkClicked;
+            authorCard.Controls.Add(this.markhazletonLinkLabel);
+
+            var portfolioLabel = new Label
+            {
+                Text      = "Make Bold Spark portfolio  ·  Make Bold Solutions",
+                Font      = new Font("Segoe UI", 8.5f, FontStyle.Italic),
+                ForeColor = SubtleText,
+                AutoSize  = true,
+                Location  = new Point(14, 84)
+            };
+            authorCard.Controls.Add(portfolioLabel);
+
+            y += 122;
 
             // Tech stack card
             var techCard = new Panel
@@ -744,6 +781,7 @@ namespace MWH.KeyPressCounter
         private Label aboutVersionLabel = null!;
         private Label aboutDescLabel = null!;
         private LinkLabel githubLinkLabel = null!;
+        private LinkLabel markhazletonLinkLabel = null!;
         private Label aboutTechLabel = null!;
         private Label aboutLicenseLabel = null!;
         private Label aboutPrivacyLabel = null!;
