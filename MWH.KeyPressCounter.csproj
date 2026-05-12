@@ -30,8 +30,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="tests\**\*.cs" />
+    <Compile Remove="server\**\*.cs" />
     <EmbeddedResource Remove="tests\**\*" />
+    <EmbeddedResource Remove="server\**\*" />
     <None Remove="tests\**\*" />
+    <None Remove="server\**\*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="All" />

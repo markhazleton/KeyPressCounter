@@ -213,6 +213,22 @@ namespace MWH.KeyPressCounter
             }
         }
 
+        private void liveSiteLinkLabel_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://keypresscounter.makeboldspark.com/",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error opening link: {ex.Message}");
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -273,6 +289,7 @@ namespace MWH.KeyPressCounter
             this.aboutDescLabel    = new Label();
             this.githubLinkLabel         = new LinkLabel();
             this.markhazletonLinkLabel   = new LinkLabel();
+            this.liveSiteLinkLabel       = new LinkLabel();
             this.aboutTechLabel    = new Label();
             this.aboutLicenseLabel = new Label();
             this.aboutPrivacyLabel = new Label();
@@ -602,7 +619,7 @@ namespace MWH.KeyPressCounter
             {
                 BackColor = CardBackground,
                 Location  = new Point(16, y),
-                Size      = new Size(590, 110)
+                Size      = new Size(590, 136)
             };
             aboutScroll.Controls.Add(authorCard);
             authorCard.Controls.Add(MakeSectionHeader("Author", new Point(14, 10)));
@@ -637,17 +654,27 @@ namespace MWH.KeyPressCounter
             this.markhazletonLinkLabel.LinkClicked += markhazletonLinkLabel_LinkClicked;
             authorCard.Controls.Add(this.markhazletonLinkLabel);
 
+            this.liveSiteLinkLabel.Text      = "keypresscounter.makeboldspark.com";
+            this.liveSiteLinkLabel.Font      = new Font("Segoe UI", 10f);
+            this.liveSiteLinkLabel.LinkColor = PrimaryColor;
+            this.liveSiteLinkLabel.AutoSize  = true;
+            this.liveSiteLinkLabel.Location  = new Point(14, 84);
+            this.liveSiteLinkLabel.Links.Clear();
+            this.liveSiteLinkLabel.Links.Add(0, this.liveSiteLinkLabel.Text.Length, "https://keypresscounter.makeboldspark.com/");
+            this.liveSiteLinkLabel.LinkClicked += liveSiteLinkLabel_LinkClicked;
+            authorCard.Controls.Add(this.liveSiteLinkLabel);
+
             var portfolioLabel = new Label
             {
                 Text      = "Make Bold Spark portfolio  ·  Make Bold Solutions",
                 Font      = new Font("Segoe UI", 8.5f, FontStyle.Italic),
                 ForeColor = SubtleText,
                 AutoSize  = true,
-                Location  = new Point(14, 84)
+                Location  = new Point(14, 110)
             };
             authorCard.Controls.Add(portfolioLabel);
 
-            y += 122;
+            y += 148;
 
             // Tech stack card
             var techCard = new Panel
@@ -782,6 +809,7 @@ namespace MWH.KeyPressCounter
         private Label aboutDescLabel = null!;
         private LinkLabel githubLinkLabel = null!;
         private LinkLabel markhazletonLinkLabel = null!;
+        private LinkLabel liveSiteLinkLabel = null!;
         private Label aboutTechLabel = null!;
         private Label aboutLicenseLabel = null!;
         private Label aboutPrivacyLabel = null!;
