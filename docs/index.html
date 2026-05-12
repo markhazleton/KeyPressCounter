@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KeyPressCounter — Windows Input & Performance Monitor</title>
+  <meta name="description" content="A lightweight Windows system tray utility that monitors keyboard and mouse input patterns alongside real-time system performance metrics. Private, local, no data ever leaves your machine." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="nav-logo-icon">⌨️</span>
+        <span>KeyPressCounter</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="#install">Install</a></li>
+        <li>
+          <a href="https://github.com/MarkHazleton/KeyPressCounter" class="nav-github" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-bg-glow"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge reveal">
+        <span class="badge-dot"></span>
+        Windows System Tray Utility · .NET 10.0 · Open Source
+      </div>
+
+      <h1 class="hero-title reveal">
+        Track every keystroke.<br/>
+        <span class="gradient-text">Respect every secret.</span>
+      </h1>
+
+      <p class="hero-subtitle reveal">
+        KeyPressCounter silently counts your keyboard and mouse activity while monitoring
+        real-time system performance — all locally, with no data ever leaving your machine.
+      </p>
+
+      <div class="hero-actions reveal">
+        <a href="https://github.com/MarkHazleton/KeyPressCounter/releases" class="btn-primary" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download for Windows
+        </a>
+        <a href="https://github.com/MarkHazleton/KeyPressCounter" class="btn-secondary" target="_blank" rel="noopener">
+          View Source
+        </a>
+      </div>
+
+      <div class="hero-meta reveal">
+        <span class="meta-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Windows 10+ x64
+        </span>
+        <span class="meta-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Runs in background
+        </span>
+        <span class="meta-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Zero telemetry
+        </span>
+        <span class="meta-pill">MIT License</span>
+      </div>
+    </div>
+
+    <!-- LIVE DEMO WIDGET -->
+    <div class="hero-widget reveal">
+      <div class="widget-header">
+        <span class="widget-dots">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="widget-title">KeyPressCounter</span>
+        <span class="widget-status"><span class="live-dot"></span>Live</span>
+      </div>
+      <div class="widget-body">
+        <div class="widget-tabs">
+          <button class="widget-tab active" data-tab="input">Input Stats</button>
+          <button class="widget-tab" data-tab="system">System</button>
+        </div>
+        <div class="widget-panel" id="panel-input">
+          <div class="stat-row">
+            <div class="stat-item">
+              <div class="stat-label">Keystrokes</div>
+              <div class="stat-value" id="demo-keys">0</div>
+              <div class="stat-sub">since reset</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Mouse Clicks</div>
+              <div class="stat-value" id="demo-clicks">0</div>
+              <div class="stat-sub">since reset</div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-item">
+              <div class="stat-label">Peak / min</div>
+              <div class="stat-value accent" id="demo-peak">0</div>
+              <div class="stat-sub">keystrokes</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Active</div>
+              <div class="stat-value green" id="demo-uptime">00:00</div>
+              <div class="stat-sub">session time</div>
+            </div>
+          </div>
+          <div class="mini-graph">
+            <canvas id="mini-chart" width="280" height="60"></canvas>
+          </div>
+        </div>
+        <div class="widget-panel hidden" id="panel-system">
+          <div class="sys-metric">
+            <span class="sys-label">CPU</span>
+            <div class="sys-bar-track"><div class="sys-bar" id="cpu-bar"></div></div>
+            <span class="sys-val" id="cpu-val">0%</span>
+          </div>
+          <div class="sys-metric">
+            <span class="sys-label">RAM</span>
+            <div class="sys-bar-track"><div class="sys-bar green-bar" id="ram-bar"></div></div>
+            <span class="sys-val" id="ram-val">0%</span>
+          </div>
+          <div class="sys-metric">
+            <span class="sys-label">Disk R</span>
+            <div class="sys-bar-track"><div class="sys-bar yellow-bar" id="disk-bar"></div></div>
+            <span class="sys-val" id="disk-val">0 KB/s</span>
+          </div>
+          <div class="sys-metric">
+            <span class="sys-label">Net ↑</span>
+            <div class="sys-bar-track"><div class="sys-bar blue-bar" id="net-bar"></div></div>
+            <span class="sys-val" id="net-val">0 KB/s</span>
+          </div>
+          <div class="sys-uptime">
+            System uptime: <span id="sys-uptime-val">calculating…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-label reveal">What's inside</div>
+      <h2 class="section-title reveal">Everything you need.<br/>Nothing you don't.</h2>
+      <p class="section-sub reveal">Six years of Windows internals distilled into a single, self-contained tray utility.</p>
+
+      <div class="features-grid">
+
+        <div class="feature-card reveal">
+          <div class="feature-icon" style="--c:#6366f1">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3>Input Monitoring</h3>
+          <p>Counts keystrokes and mouse clicks in real time using SharpHook's global hook. No key identities stored — only integer totals.</p>
+          <ul class="feature-list">
+            <li>Total and per-interval counts</li>
+            <li>Peak activity rate (keys/min)</li>
+            <li>Longest idle period tracking</li>
+          </ul>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon" style="--c:#06b6d4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3>System Performance</h3>
+          <p>Seven Windows Performance Counters sampled every second, with a 60-second rolling history graph rendered in GDI+.</p>
+          <ul class="feature-list">
+            <li>CPU, RAM, disk I/O, network</li>
+            <li>Dark-themed anti-aliased graphs</li>
+            <li>Top 10 process monitor</li>
+          </ul>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon" style="--c:#10b981">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <h3>Idle Detection</h3>
+          <p>P/Invokes <code>GetLastInputInfo</code> from User32.dll to detect inactivity. Configurable threshold keeps stats meaningful.</p>
+          <ul class="feature-list">
+            <li>Configurable idle threshold (default 5 min)</li>
+            <li>Automatically skips log writes when idle</li>
+            <li>Toggle on/off from the tray menu</li>
+          </ul>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon" style="--c:#f59e0b">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <h3>Activity Logging</h3>
+          <p>Two timers keep a persistent record of your activity, automatically rotating into daily summaries at midnight.</p>
+          <ul class="feature-list">
+            <li>Activity log every 60 s (configurable)</li>
+            <li>Daily summary at midnight</li>
+            <li>Open logs from the tray menu</li>
+          </ul>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon" style="--c:#ec4899">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>Persistent Config</h3>
+          <p>JSON configuration serialized to <code>%APPDATA%</code> with Windows startup registry integration and auto-sync on every launch.</p>
+          <ul class="feature-list">
+            <li>Configurable log directory & interval</li>
+            <li>Start-with-Windows toggle</li>
+            <li>Registry-synchronized startup flag</li>
+          </ul>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon" style="--c:#8b5cf6">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+          </div>
+          <h3>System Tray UI</h3>
+          <p>Runs unobtrusively with a rich context menu. A three-tab WinForms dashboard opens on double-click with 1-second refresh.</p>
+          <ul class="feature-list">
+            <li>Input stats, system perf, about tabs</li>
+            <li>Quick-launch for Task/Resource/Perf monitors</li>
+            <li>Balloon tip notifications</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section section-alt" id="how-it-works">
+    <div class="container">
+      <div class="section-label reveal">Under the hood</div>
+      <h2 class="section-title reveal">Built on solid<br/>Windows foundations.</h2>
+      <p class="section-sub reveal">Every component maps to a specific, well-understood Windows API — no fragile third-party middleware.</p>
+
+      <div class="timeline">
+
+        <div class="timeline-item reveal">
+          <div class="timeline-num">01</div>
+          <div class="timeline-content">
+            <div class="tl-tag">SharpHook</div>
+            <h3>Global Input Hook</h3>
+            <p>A <code>TaskPoolGlobalHook</code> runs on a background thread, raising <code>KeyPressed</code> and <code>MousePressed</code> events. Each event calls <code>Counter.Increment()</code> behind a lock — only integers ever touch memory.</p>
+          </div>
+          <div class="timeline-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-num">02</div>
+          <div class="timeline-content">
+            <div class="tl-tag">System.Diagnostics</div>
+            <h3>Performance Counters</h3>
+            <p>Seven <code>PerformanceCounter</code> objects are initialized at startup and sampled every second. The primary network adapter is auto-detected via <code>NetworkInterface</code>.</p>
+          </div>
+          <div class="timeline-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-num">03</div>
+          <div class="timeline-content">
+            <div class="tl-tag">User32.dll P/Invoke</div>
+            <h3>Idle Detection</h3>
+            <p><code>GetLastInputInfo</code> is P/Invoked to compute idle time in milliseconds. When idle time exceeds the threshold, hook handlers return early and log writes are skipped entirely.</p>
+          </div>
+          <div class="timeline-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-num">04</div>
+          <div class="timeline-content">
+            <div class="tl-tag">System.Timers.Timer</div>
+            <h3>Dual Log Timers</h3>
+            <p>An activity timer fires every <em>N</em> seconds to write a log entry. A daily summary timer fires once at midnight, writes totals, resets counters, and re-arms for the next midnight.</p>
+          </div>
+          <div class="timeline-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-num">05</div>
+          <div class="timeline-content">
+            <div class="tl-tag">System.Text.Json + WMI</div>
+            <h3>Config & Hardware Info</h3>
+            <p><code>AppConfig</code> serializes to a JSON file at <code>%APPDATA%</code>. WMI queries gather CPU, RAM, and GPU details at startup and cache them for instant display in the dashboard.</p>
+          </div>
+          <div class="timeline-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="section" id="privacy">
+    <div class="container">
+      <div class="privacy-card reveal">
+        <div class="privacy-left">
+          <div class="privacy-shield">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <div>
+            <h2>Private by design.</h2>
+            <p>KeyPressCounter was built with a single guiding principle: your keystrokes belong to you.</p>
+          </div>
+        </div>
+        <div class="privacy-grid">
+          <div class="privacy-item">
+            <div class="pi-icon no">✗</div>
+            <div>
+              <strong>No keystroke content</strong>
+              <span>Only integer totals are ever stored — never which keys you pressed.</span>
+            </div>
+          </div>
+          <div class="privacy-item">
+            <div class="pi-icon no">✗</div>
+            <div>
+              <strong>No network access</strong>
+              <span>The application makes zero outbound connections. Ever.</span>
+            </div>
+          </div>
+          <div class="privacy-item">
+            <div class="pi-icon no">✗</div>
+            <div>
+              <strong>No cloud storage</strong>
+              <span>All data lives in your Documents folder and <code>%APPDATA%</code>. Nowhere else.</span>
+            </div>
+          </div>
+          <div class="privacy-item">
+            <div class="pi-icon no">✗</div>
+            <div>
+              <strong>No cursor positions</strong>
+              <span>Mouse events only increment a counter. No coordinates are recorded.</span>
+            </div>
+          </div>
+          <div class="privacy-item">
+            <div class="pi-icon yes">✓</div>
+            <div>
+              <strong>Fully open source</strong>
+              <span>Every line of code is on GitHub. Audit it yourself.</span>
+            </div>
+          </div>
+          <div class="privacy-item">
+            <div class="pi-icon yes">✓</div>
+            <div>
+              <strong>You own your data</strong>
+              <span>Plain text log files you can read, move, or delete any time.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section class="section section-alt" id="install">
+    <div class="container">
+      <div class="section-label reveal">Get started</div>
+      <h2 class="section-title reveal">Up and running<br/>in 60 seconds.</h2>
+
+      <div class="install-tabs reveal">
+        <button class="itab active" data-panel="release">Download Release</button>
+        <button class="itab" data-panel="source">Build from Source</button>
+      </div>
+
+      <div class="install-panel" id="panel-release">
+        <div class="install-steps">
+          <div class="install-step">
+            <div class="is-num">1</div>
+            <div class="is-body">
+              <strong>Download the latest release</strong>
+              <p>Grab <code>KeyPressCounter-vX.X.X-win-x64.zip</code> from the GitHub Releases page.</p>
+              <a href="https://github.com/MarkHazleton/KeyPressCounter/releases" class="btn-primary sm" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Go to Releases
+              </a>
+            </div>
+          </div>
+          <div class="install-step">
+            <div class="is-num">2</div>
+            <div class="is-body">
+              <strong>Install .NET 10.0 Runtime</strong>
+              <p>Required if not already installed. Verify with <code>dotnet --version</code> in a terminal.</p>
+              <a href="https://dotnet.microsoft.com/download/dotnet/10.0" class="code-link" target="_blank" rel="noopener">→ Download .NET 10.0 Runtime</a>
+            </div>
+          </div>
+          <div class="install-step">
+            <div class="is-num">3</div>
+            <div class="is-body">
+              <strong>Extract and run</strong>
+              <p>Extract the ZIP to any folder and double-click <code>MWH.KeyPressCounter.exe</code>. The app appears in the system tray immediately.</p>
+            </div>
+          </div>
+          <div class="install-step">
+            <div class="is-num">4</div>
+            <div class="is-body">
+              <strong>Optional: start with Windows</strong>
+              <p>Right-click the tray icon → <strong>Settings → Start with Windows</strong> to enable auto-start on login.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-panel hidden" id="panel-source">
+        <div class="code-block">
+          <div class="code-header">
+            <span>bash</span>
+            <button class="copy-btn" data-code="git clone https://github.com/MarkHazleton/KeyPressCounter.git&#10;cd KeyPressCounter&#10;dotnet build MWH.KeyPressCounter.csproj --configuration Release&#10;dotnet run --project MWH.KeyPressCounter.csproj">Copy</button>
+          </div>
+          <pre><code><span class="c"># Clone the repository</span>
+git clone https://github.com/MarkHazleton/KeyPressCounter.git
+cd KeyPressCounter
+
+<span class="c"># Build (Release configuration)</span>
+dotnet build MWH.KeyPressCounter.csproj --configuration Release
+
+<span class="c"># Run (requires Windows)</span>
+dotnet run --project MWH.KeyPressCounter.csproj</code></pre>
+        </div>
+        <div class="deps-table">
+          <div class="deps-header">NuGet Dependencies</div>
+          <div class="dep-row">
+            <span class="dep-name">SharpHook</span>
+            <span class="dep-ver">7.1.1</span>
+            <span class="dep-desc">Global keyboard &amp; mouse event hooking</span>
+          </div>
+          <div class="dep-row">
+            <span class="dep-name">System.Management</span>
+            <span class="dep-ver">10.0.5</span>
+            <span class="dep-desc">WMI access for hardware information</span>
+          </div>
+          <div class="dep-row">
+            <span class="dep-name">MinVer</span>
+            <span class="dep-ver">7.0.0</span>
+            <span class="dep-desc">Semantic versioning from git tags</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="section">
+    <div class="container narrow">
+      <div class="section-label reveal">Tech stack</div>
+      <h2 class="section-title reveal">Platform-native.<br/>No bloat.</h2>
+      <div class="stack-pills reveal">
+        <span class="stack-pill" style="--c:#512BD4">.NET 10.0</span>
+        <span class="stack-pill" style="--c:#239120">C# 13</span>
+        <span class="stack-pill" style="--c:#6366f1">Windows Forms</span>
+        <span class="stack-pill" style="--c:#06b6d4">SharpHook 7.1.1</span>
+        <span class="stack-pill" style="--c:#f59e0b">System.Management</span>
+        <span class="stack-pill" style="--c:#10b981">WMI</span>
+        <span class="stack-pill" style="--c:#ec4899">User32 P/Invoke</span>
+        <span class="stack-pill" style="--c:#8b5cf6">Performance Counters</span>
+        <span class="stack-pill" style="--c:#3b82f6">System.Text.Json</span>
+        <span class="stack-pill" style="--c:#e2e8f0">GDI+ Graphs</span>
+        <span class="stack-pill" style="--c:#94a3b8">MinVer</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section">
+    <div class="container narrow text-center">
+      <div class="cta-glow"></div>
+      <h2 class="cta-title reveal">Start measuring<br/>your productivity today.</h2>
+      <p class="cta-sub reveal">Free. Open source. Runs silently in the background. Works entirely offline.</p>
+      <div class="cta-actions reveal">
+        <a href="https://github.com/MarkHazleton/KeyPressCounter/releases" class="btn-primary large" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download for Windows
+        </a>
+        <a href="https://github.com/MarkHazleton/KeyPressCounter" class="btn-outline large" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">⌨️ KeyPressCounter</span>
+          <p>A lightweight Windows system tray utility.<br/>Built by <a href="https://markhazleton.com" target="_blank" rel="noopener">Mark Hazleton</a>.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <div class="footer-col-title">Project</div>
+            <a href="https://github.com/MarkHazleton/KeyPressCounter" target="_blank" rel="noopener">Source Code</a>
+            <a href="https://github.com/MarkHazleton/KeyPressCounter/releases" target="_blank" rel="noopener">Releases</a>
+            <a href="https://github.com/MarkHazleton/KeyPressCounter/issues" target="_blank" rel="noopener">Issues</a>
+            <a href="https://github.com/MarkHazleton/KeyPressCounter/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+          </div>
+          <div class="footer-col">
+            <div class="footer-col-title">Author</div>
+            <a href="https://markhazleton.com" target="_blank" rel="noopener">markhazleton.com</a>
+            <a href="https://github.com/MarkHazleton" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://makeboldspark.com" target="_blank" rel="noopener">MakeBoldSpark</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>MIT License · KeyPressCounter · Built with .NET 10.0 and Windows Forms</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

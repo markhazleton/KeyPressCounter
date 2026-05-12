@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KeyPressCounter</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #e6edf3;
+    }
+
+    header .badge {
+      margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    header .badge span {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 2rem;
+      padding: 0.2rem 0.75rem;
+      font-size: 0.75rem;
+      color: #8b949e;
+    }
+
+    header .badge span.highlight {
+      background: #1f6feb22;
+      border-color: #1f6feb;
+      color: #58a6ff;
+    }
+
+    main {
+      max-width: 860px;
+      width: 100%;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .hero .icon {
+      font-size: 4rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      color: #e6edf3;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: #8b949e;
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
+    .platform-note {
+      background: #161b22;
+      border: 1px solid #f0883e44;
+      border-left: 4px solid #f0883e;
+      border-radius: 0.5rem;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .platform-note .icon { font-size: 1.25rem; flex-shrink: 0; }
+    .platform-note p { color: #c9d1d9; font-size: 0.9rem; line-height: 1.6; }
+    .platform-note strong { color: #f0883e; }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #238636;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 0.4rem;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .download-btn:hover { background: #2ea043; }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #e6edf3;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 0.5rem;
+      padding: 1.1rem 1.25rem;
+    }
+
+    .feature-card .card-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .feature-card h3 { font-size: 0.95rem; color: #e6edf3; margin-bottom: 0.35rem; }
+    .feature-card p { font-size: 0.85rem; color: #8b949e; line-height: 1.5; }
+
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .tech-table th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      background: #161b22;
+      color: #8b949e;
+      font-weight: 600;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .tech-table td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid #21262d;
+      color: #c9d1d9;
+    }
+
+    .tech-table tr:last-child td { border-bottom: none; }
+
+    .tech-table td code {
+      background: #21262d;
+      border-radius: 0.3rem;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.82rem;
+      color: #79c0ff;
+    }
+
+    .steps {
+      counter-reset: step;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 0.5rem;
+      padding: 0.9rem 1.1rem;
+    }
+
+    .step-num {
+      background: #1f6feb;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .step p { font-size: 0.9rem; color: #c9d1d9; line-height: 1.5; }
+    .step p code {
+      background: #21262d;
+      border-radius: 0.3rem;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.82rem;
+      color: #79c0ff;
+    }
+
+    footer {
+      margin-top: auto;
+      width: 100%;
+      padding: 1.25rem 2rem;
+      background: #161b22;
+      border-top: 1px solid #30363d;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #8b949e;
+    }
+
+    footer a { color: #58a6ff; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">⌨️</span>
+  <h1>KeyPressCounter</h1>
+  <div class="badge">
+    <span class="highlight">.NET 10.0</span>
+    <span>C# 13</span>
+    <span>Windows Only</span>
+    <span>MIT License</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="hero">
+    <div class="icon">⌨️🖱️📊</div>
+    <h2>KeyPressCounter</h2>
+    <p>A lightweight Windows system tray utility that monitors keyboard and mouse input patterns alongside real-time system performance metrics — privately, with no data leaving your machine.</p>
+    <a class="download-btn" href="https://github.com/MarkHazleton/KeyPressCounter/releases" target="_blank" rel="noopener">
+      ⬇️ Download Latest Release
+    </a>
+  </div>
+
+  <div class="platform-note">
+    <span class="icon">⚠️</span>
+    <p><strong>Windows Desktop Application</strong> — KeyPressCounter is a native Windows WinForms app targeting <strong>.NET 10.0</strong>. It requires Windows 10 x64 or later and cannot be run directly in a browser. Download the release ZIP from GitHub and run <code>MWH.KeyPressCounter.exe</code> on your Windows machine.</p>
+  </div>
+
+  <section>
+    <div class="section-title">Features</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="card-icon">⌨️</div>
+        <h3>Input Tracking</h3>
+        <p>Counts total keystrokes and mouse clicks since the last reset. Tracks peak activity rates per minute without recording what you type.</p>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon">📊</div>
+        <h3>System Performance</h3>
+        <p>Real-time CPU, memory, disk I/O, and network metrics with 60-second rolling history graphs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon">🔕</div>
+        <h3>Idle Detection</h3>
+        <p>Automatically detects idle periods and optionally excludes them from activity statistics.</p>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon">🗂️</div>
+        <h3>Activity Logs</h3>
+        <p>Writes timestamped activity logs every 60 seconds and daily summary logs at midnight.</p>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon">🔒</div>
+        <h3>Private by Design</h3>
+        <p>No keystrokes are recorded. No data leaves the machine. All storage is local only.</p>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon">🖥️</div>
+        <h3>System Tray UI</h3>
+        <p>Runs unobtrusively in the system tray. Three-tab stats dashboard opens on double-click.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Tech Stack</div>
+    <table class="tech-table">
+      <thead>
+        <tr>
+          <th>Package / Technology</th>
+          <th>Version</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>.NET Windows Forms</td><td>10.0</td><td>Desktop UI framework</td></tr>
+        <tr><td><code>SharpHook</code></td><td>7.1.1</td><td>Global keyboard &amp; mouse event hooking</td></tr>
+        <tr><td><code>System.Management</code></td><td>10.0.5</td><td>WMI access for hardware info</td></tr>
+        <tr><td>Windows Performance Counters</td><td>Platform</td><td>CPU, memory, disk, network metrics</td></tr>
+        <tr><td>User32.dll P/Invoke</td><td>Platform</td><td>Idle time detection via <code>GetLastInputInfo</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-title">Getting Started (Windows)</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <p>Download the latest <code>KeyPressCounter-vX.X.X-win-x64.zip</code> from the <a href="https://github.com/MarkHazleton/KeyPressCounter/releases" style="color:#58a6ff">Releases page</a>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p>Install the <a href="https://dotnet.microsoft.com/download/dotnet/10.0" style="color:#58a6ff">.NET 10.0 Runtime</a> if not already installed. Verify with <code>dotnet --version</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p>Extract the ZIP to any folder and run <code>MWH.KeyPressCounter.exe</code>. The app appears in the system tray immediately.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <p>Double-click the tray icon to open the statistics dashboard, or right-click for the full context menu.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Building from Source</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <p>Clone the repository: <code>git clone https://github.com/MarkHazleton/KeyPressCounter.git</code></p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p>Build: <code>dotnet build MWH.KeyPressCounter.csproj --configuration Release</code></p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p>Run: <code>dotnet run --project MWH.KeyPressCounter.csproj</code> (requires Windows)</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Built by <a href="https://markhazleton.com" target="_blank" rel="noopener">Mark Hazleton</a> &mdash;
+  <a href="https://github.com/MarkHazleton/KeyPressCounter" target="_blank" rel="noopener">GitHub Repository</a> &mdash;
+  MIT License
+</footer>
+
+</body>
+</html>
