@@ -34,3 +34,4 @@ jobs:
           name: KeyPressCounter-win-x64
           path: artifacts/win-x64
           if-no-files-found: error
+          retention-days: 1
