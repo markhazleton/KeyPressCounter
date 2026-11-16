@@ -39,6 +39,6 @@
   <ItemGroup>
     <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="All" />
     <PackageReference Include="SharpHook" Version="7.1.1" />
-    <PackageReference Include="System.Management" Version="10.0.5" />
+    <PackageReference Include="System.Management" Version="11.0.0" />
   </ItemGroup>
 </Project>
